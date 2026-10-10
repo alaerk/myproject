@@ -2,7 +2,6 @@ const User = require('../models/user');
 const {validationResult} = require('express-validator')
 const jwt = require('jsonwebtoken');
 const Notes = require('../models/notes')
-require('dotenv').config();
 const maxAGe = 3 * 24 * 60 * 60;
 const createToken = (id)=>{
     return jwt.sign({id},process.env.secret,{ expiresIn:maxAGe})
@@ -108,5 +107,17 @@ module.exports.detaille_note = async (req,res)=>{
 
     }catch(err){
         res.status(404).json({errors:err.message});
+    }
+}
+module.exports.update_note = async (req,res)=>{
+    const id = req.params.id; const {title,tag,content} = req.body;
+    try{
+         const useId = await getuser(req);
+        const note = await Notes.findOneAndUpdate({_id:id},{id:useId._id,title,tag,content},{returnDocument:'after',runValidators:true});
+        if(!note) return res.status(404).json({errors:'not found'});
+        res.status(201).json({note});
+    }
+    catch(err){
+        res.status(500).json({errors:err.message});
     }
 }

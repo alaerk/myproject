@@ -3,7 +3,7 @@ const User = require('../models/user');
 module.exports.authetificateJwt =(req,res,next)=>{
     const token = req.cookies?.jwt;
     if(token){
-        const test = jwt.verify(token,"alae secret",(err,decodedToken)=>{
+        const test = jwt.verify(token,process.env.secret,(err,decodedToken)=>{
             if(err){
                 console.log(err.message);
                 res.redirect('/login');

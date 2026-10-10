@@ -21,7 +21,16 @@ router.get('/afficherAllnote',authetificateJwts.authetificateJwt,controlles.get_
 router.delete('/notes/:id',authetificateJwts.authetificateJwt,controlles.delete_note);
 router.get('/note/:id',authetificateJwts.authetificateJwt,controlles.detaille_note);
 router.get('/logout',authetificateJwts.authetificateJwt,(req,res)=>{
-    res.cookie('jwt','',{maxAge:1 * 60 * 1000,httpOnly:true});
+    res.cookie('jwt','',{maxAge: 1 * 1000,httpOnly:true});
     res.status(200).render('login');
 })
+router.get('/update/:id',authetificateJwts.authetificateJwt,async (req,res)=>{
+    const id = req.params.id;
+    try{const note = await Notes.findById(id);
+    res.render('update',{note})}
+    catch(err){
+        res.status(404).json({errors:err.massage});
+    }
+})
+router.put('/updates/:id',authetificateJwts.authetificateJwt,controlles.update_note)
 module.exports = router;

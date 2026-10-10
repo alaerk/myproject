@@ -1,20 +1,23 @@
 const mongoose = require('mongoose');
-const notes = mongoose.Schema({
-    title:{
+const Shema = mongoose.Schema;
+const notesShema = new Shema({
+    id:{
         type:String,
         required:true
     },
+    title:{
+        type:String,
+        required:true,
+    },
+    tag:{
+       type:String,
+       required:true 
+    },
     content:{
-        type:Stirng,
+        type:String,
         required:true
-    },
-    category:{
-        type:String
-    },
-    isPinned:{
-        type:Boolean,
-        default:false
     }
 },{timestamps:true});
-const Notes = mongoose.model('Notes',notes);
+
+const Notes = mongoose.model('Notes',notesShema);
 module.exports = Notes;

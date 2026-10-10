@@ -1,17 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<%= includes('./publics/header') %>
-<body>
-    <div>
-        <h1>Log in</h1>
-        <form>
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email">
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password">
-        </form>
-
-    </div>
-</body>
-<%= includes('./publics/footer') %>
-</html>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><script src="https://cdn.tailwindcss.com"></script>
+<style>body{font-family:'Cairo',sans-serif}</style></head>
+<body class="bg-white">
+<nav class="border-b px-6 py-3 flex justify-between max-w-6xl mx-auto">
+  <a href="/" class="font-bold">📝 MyNotes</a>
+  <div class="flex gap-4 text-sm"><a href="/">Home</a><a href="/login" class="font-bold">Log in</a><a href="/signup">Sign up</a></div>
+</nav>
+<div class="min-h-[80vh] flex items-center justify-center">
+  <form id="loginForm" class="w-full max-w-sm p-2 space-y-4">
+    <h1 class="text-3xl font-bold text-center">مرحبا بعودتك 👋</h1>
+    <input name="email" type="email" placeholder="الإيميل" class="w-full border rounded-2xl px-4 py-3 outline-none focus:border-black">
+    <p class="errors email text-red-500 text-xs h-3"></p>
+    <input name="password" type="password" placeholder="كلمة السر" class="w-full border rounded-2xl px-4 py-3 outline-none focus:border-black">
+    <p class="errors password text-red-500 text-xs h-3"></p>
+    <button class="w-full bg-black text-white py-3 rounded-2xl font-bold">دخول</button>
+    <p class="text-center text-sm">ليس لدي حساب !<a href="/signup" class="font-bold underline">إنشاء حساب</a></p>
+  </form>
+</div>
+<script>
+const form = document.getElementById('loginForm');
+form.addEventListener('submit', async(e)=>{
+  e.preventDefault();
+  const emailError=document.querySelector('.errors.email');
+   const passError=document.querySelector('.errors.password');
+  emailError.textContent=''; 
+  passError.textContent='';
+  fetch('/login',
+  {method:'POST',
+  body:JSON.stringify({email:form.email.value,password:form.password.value}),
+  headers:{'Content-Type':'application/json'}
+})
+.then((res)=>res.json())
+.then((data)=>{
+  location.assign('/home')
+})
+.catch(err=>{
+  emailError.textContent= err.email; 
+  passError.textContent=err.password;
+})
+});
+</script>
+</body></html>

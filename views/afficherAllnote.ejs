@@ -1,8 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<%= includes('./publics/header') %>
-<body>
-    
-</body>
-<%= includes('./publics/footer') %>
-</html>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-[#f8f9fb]">
+<nav class="bg-white border-b sticky top-0">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex justify-between">
+    <a href="/" class="font-bold">📝 MyNotes</a>
+    <div class="flex gap-5 text-sm items-center">
+      <a href="/" class="text-gray-500">الرئيسية</a>
+      <a href="/afficherAllnote" class="font-bold">ملاحظاتي</a>
+      <a href="/create" class="bg-black text-white px-5 py-2 rounded-full">+ جديدة</a>
+    </div>
+  </div>
+</nav>
+<div class="max-w-6xl mx-auto px-6 py-8">
+  <h2 class="text-2xl font-bold">ملاحظاتي</h2>
+  <div class="grid md:grid-cols-3 gap-4 mt-6">
+    <% notes.forEach(note=>{ %>
+    <div class="group bg-white border rounded-[20px] p-5 hover:shadow-xl transition">
+      <div class="flex justify-between"><span class="bg-gray-100 text-xs px-3 py-1 rounded-full"><%= note.tag || 'عام' %></span>
+      <button onclick="fetch(`/notes/<%= note._id %>`,{method:'DELETE'}).then(r=>{if(r.ok) location.reload()})" class="opacity-0 group-hover:opacity-100 text-red-500">حذف</button></div>
+      <h3 onclick="location.href='/note/<%= note._id %>'" class="font-bold mt-4 cursor-pointer hover:underline"><%= note.title %></h3>
+      <p onclick="location.href='/note/<%= note._id %>'" class="text-sm text-gray-500 mt-2 line-clamp-2 cursor-pointer"><%= note.content %></p>
+      <p class="text-[11px] text-gray-400 mt-4"><%= note.createdAt.toLocaleDateString() %></p>
+    </div>
+    <% }) %>
+  </div>
+</div>
+</body></html>

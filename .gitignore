@@ -1,1 +1,6 @@
 .env
+node_models/
+.DS_Store
+Thumbs.db
+*.log
+uploads/

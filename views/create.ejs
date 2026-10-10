@@ -1,8 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<%= includes('./publics/header') %>
-<body>
-    
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-[#f8f9fb]">
+<nav class="bg-white border-b px-6 py-3 flex justify-between max-w-6xl mx-auto">
+  <a href="/afficherAllnote">← رجوع</a><b>ملاحظة جديدة</b><span></span>
+</nav>
+<div class="max-w-2xl mx-auto p-6">
+  <form  class="bg-white border rounded-[24px] p-7 space-y-5 shadow-sm">
+    <div><label class="text-sm font-bold">العنوان</label><input name="title" class="w-full mt-2 border rounded-xl px-4 py-3 focus:border-black outline-none" placeholder="مثال: مراجعة درس" required></div>
+    <div><label class="text-sm font-bold">التصنيف</label><select name="tag" class="w-full mt-2 border rounded-xl px-4 py-3"><option>Study</option><option>Work</option><option>Personnal</option></select></div>
+    <div><label class="text-sm font-bold">المحتوى</label><textarea name="content" rows="8" class="w-full mt-2 border rounded-xl px-4 py-3 focus:border-black outline-none" required></textarea></div>
+    <button class="w-full bg-black text-white py-3 rounded-xl font-bold">حفظ الملاحظة</button>
+  </form>
+</div>
+<script>
+  const form = document.querySelector('form');
+  form.addEventListener('submit',async (e)=>{
+    e.preventDefault();
+    const title = form.elements['title'].value;
+    const tag = form.elements['tag'].value;
+    const content = form.elements['content'].value;
+    console.log(title,tag,content)
+    fetch('/create',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({title,tag,content})
+    })
+    .then((res)=>res.json())
+    .then(data=>location.assign('/afficherAllnote'))
+    .catch(err=>console.log(err));
+  })
+</script>
 </body>
-<%= includes('./publics/footer') %>
 </html>

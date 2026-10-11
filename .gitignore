@@ -4,3 +4,4 @@ node_models/
 Thumbs.db
 *.log
 uploads/.env
+node_modules

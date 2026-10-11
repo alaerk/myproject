@@ -11,9 +11,7 @@ connect();
 
 
 
-app.listen(process.env.port,()=>{
-    console.log('listening from the port 3000');
-})
+
 app.use(express.json());
 app.set('view engine','ejs');
 app.use(cookiesParser())
@@ -42,3 +40,8 @@ app.get('/create',authetificateJwts.authetificateJwt,(req,res)=>{
 
 // })
 app.use(router);
+
+
+app.listen(process.env.port,()=>{
+    console.log('listening from the port 3000');
+})

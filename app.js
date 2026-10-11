@@ -45,3 +45,5 @@ app.use(router);
 app.listen(process.env.port,()=>{
     console.log('listening from the port 3000');
 })
+
+module.exports = app

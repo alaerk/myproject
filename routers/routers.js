@@ -21,7 +21,7 @@ router.get('/afficherAllnote',authetificateJwts.authetificateJwt,controlles.get_
 router.delete('/notes/:id',authetificateJwts.authetificateJwt,controlles.delete_note);
 router.get('/note/:id',authetificateJwts.authetificateJwt,controlles.detaille_note);
 router.get('/logout',authetificateJwts.authetificateJwt,(req,res)=>{
-    res.cookie('jwt','',{maxAge: 1 * 1000,httpOnly:true});
+    res.cookie('jwt','',{maxAge: 3 * 24 * 60 * 60 * 1000,httpOnly:true});
     res.status(200).render('login');
 })
 router.get('/update/:id',authetificateJwts.authetificateJwt,async (req,res)=>{

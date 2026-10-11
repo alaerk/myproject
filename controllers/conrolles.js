@@ -73,7 +73,7 @@ module.exports.post_create = async (req,res)=>{
 module.exports.get_afficher =async (req,res)=>{
     try{
         const id =await getuser(req);
-        if(!id) return res.redirect('/login');
+        if(!id) return res.render('login');
         const notes = await Notes.find({id:id._id});
         res.status(200).render('afficherAllnote',{notes});
         

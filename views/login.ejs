@@ -31,11 +31,14 @@ form.addEventListener('submit', async(e)=>{
 })
 .then((res)=>res.json())
 .then((data)=>{
-  location.assign('/home')
+  if(data?.user) location.assign('/home');
+  if(data?.errors){
+    emailError.textContent=data.errors.email;
+    passError.textContent=data.errors.password;
+  }
 })
 .catch(err=>{
-  emailError.textContent= err.email; 
-  passError.textContent=err.password;
+  console.log(err);
 })
 });
 </script>

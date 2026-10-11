@@ -6,7 +6,7 @@ module.exports.authetificateJwt =(req,res,next)=>{
         const test = jwt.verify(token,process.env.secret,(err,decodedToken)=>{
             if(err){
                 console.log(err.message);
-                res.redirect('/login');
+                res.render('login');
             }
             else{
                 next()

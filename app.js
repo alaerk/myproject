@@ -5,17 +5,25 @@ const router = require('./routers/routers')
 const {body,validationResult} = require('express-validator')
 const authetificateJwts = require('./auths/auth');
 const cookiesParser = require('cookie-parser');
+const path = require('path');
+
 require('dotenv').config();
 const app = express();
+
 connect();
-
-
 
 
 app.use(express.json());
 app.set('view engine','ejs');
 app.use(cookiesParser())
+app.set('trust proxy',1);
 // app.use('*',authetificateJwts.getUser);
+//  ,(req,res)=>{
+//     const error = {
+//         message:'too many time to arrive to this webs'
+//     }
+//     res.status(429).json({error})
+// }
 app.get('/',(req,res)=>{
     res.render('home');
 })
@@ -32,18 +40,14 @@ app.get('/login',(req,res)=>{
 app.get('/create',authetificateJwts.authetificateJwt,(req,res)=>{
     res.render('create');
 })
-// app.get('/afficherAllnote',authetificateJwts.authetificateJwt,(req,res)=>{
-//     res.render('afficherAllnote');
-// })
-// app.get('/afficherAllnote/:id',authetificateJwt,(req,res)=>{
-//     const id = req.params.id;
-
-// })
+app.get('/303',(req,res)=>{
+    res.status(429).sendFile(path.join(__dirname,'views','404.ejs'));
+})
 app.use(router);
 
 
 app.listen(process.env.port,()=>{
     console.log('listening from the port 3000');
 })
-
+;
 module.exports = app

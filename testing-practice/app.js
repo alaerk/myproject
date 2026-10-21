@@ -22,7 +22,7 @@ app.post('/register',async(req,res)=>{
         return res.status(400).json({errors});
     }
     try{
-        const exist = await User.finOne({email});
+        const exist = await User.findOne({email});
         if(exist) return res.status(409).json({errors:'this email was exist'});
         const hash = await bcrypt.hash(password,10);
         await User.create({email,password:hash});

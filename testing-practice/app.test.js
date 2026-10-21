@@ -1,10 +1,13 @@
+require('dotenv').config();
 const app = require('./app');
 const request = require('supertest');
 const mongoose = require('mongoose');
 const User = require('./user');
-require('dotenv').config();
+
 beforeAll(async()=>{
+    
     await mongoose.connect(process.env.test_url);
+    console.log(mongoose.connection.name);
 })
 beforeEach(async()=>{
     await User.deleteMany({});

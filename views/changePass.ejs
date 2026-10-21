@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+<style>body{font-family:'Cairo',sans-serif}</style>
+    <title>Change Password</title>
+</head>
+<body class="bg-white">
+    <div class="min-h-[80vh] flex items-center justify-center">
+  <form id="loginForm" class="w-full max-w-sm p-2 space-y-4">
+    <h1 class="text-3xl font-bold text-center"> لا تنسى كلمة السر مرة اخرى </h1>
+    <input name="password" type="password" placeholder="كلمة السر" class="w-full border rounded-2xl px-4 py-3 outline-none focus:border-black">
+    <input name="repassword" type="password" placeholder="اعد كتابة كلمة السر" class="w-full border rounded-2xl px-4 py-3 outline-none focus:border-black">
+    <p class="errors password text-red-500 text-xs h-3"></p>
+    <button type="submit" class="w-full bg-black text-white py-3 rounded-2xl font-bold">دخول</button>
+    
+  </form>
+</div>
+    <!-- <form>
+        <label for="password">Password</label>
+        <input type="password" required name="password">
+        <label for="passwordrenter">Renter the password</label>
+        <input type="password" name="passwordrenter" required>
+        <div id="error"></div>
+        <button type="submit">recover</button>
+    </form> -->
+    <script>
+        const  form = document.querySelector('form');
+        const error = document.querySelector('.errors');
+        form.addEventListener('submit',async (e)=>{
+            e.preventDefault();
+            const pass = form.elements['password'].value;
+            const passRenter = form.elements['repassword'].value;
+            if(pass === passRenter){
+                fetch('/changePassword',{
+                    method:'POST',
+                    body:JSON.stringify({password:pass}),
+                    headers:{'Content-Type':'application/json'}
+                })
+                .then(res=>{
+                    location.assign('/home');
+                })
+                .catch(err=>{
+                    error.textContent = err.message;
+                })
+            }else{
+                error.textContent = 'Two password want to be same !!';
+            }
+        })
+    </script>
+</body>
+</html>

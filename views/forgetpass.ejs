@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>body{font-family:'Cairo',sans-serif}</style>
+    <title>@Forget Password :</title>
+</head>
+<body class="bg-white">
+    <div class="min-h-[80vh] flex items-center justify-center">
+  <form id="loginForm" class="w-full max-w-sm p-2 space-y-4">
+    <h1 class="text-3xl font-bold text-center">مرحبا بك 👋</h1>
+    <input name="email" type="email" placeholder="الإيميل" class="w-full border rounded-2xl px-4 py-3 outline-none focus:border-black">
+    <p class="errors email text-red-500 text-xs h-3"></p>
+    <button type="submit" class="w-full bg-black text-white py-3 rounded-2xl font-bold">استرجاع</button>
+  </form>
+</div>
+    <script>
+        const form = document.querySelector('form');
+        const textError = document.querySelector('.errors');
+        form.addEventListener('submit',async function(e){
+            e.preventDefault();
+            textError.textContent = '';
+            const email = form.elements['email'].value;
+            fetch('/recoverPassword',{
+                method:'POST',
+                body:JSON.stringify({email}),
+                headers:{'Content-Type':'application/json'}
+            })
+            .then(res=>res.json())
+            .then(data=>{
+                if(data?.user) {
+                    location.assign(`changePass`);
+                    // console.log(data.user);
+                }
+                if(data?.err){
+                    textError.textContent = data.err.message;
+                }
+            })
+            .catch(err=>{
+                console.log(err);
+                textError.textContent = err.message;
+            })
+        }) 
+    </script>
+</body>
+</html>

@@ -33,6 +33,10 @@ form.addEventListener('submit', async(e)=>{
     return res.json();
   })
   .then((data)=>{
+    if(data?.errors){emailError.textContent=data.errors.email; 
+  passError.textContent=data.errors.password;
+return;
+}
       location.assign('/home');
   })
   .catch(err=>{

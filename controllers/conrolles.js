@@ -2,6 +2,7 @@ const User = require('../models/user');
 const {validationResult} = require('express-validator')
 const jwt = require('jsonwebtoken');
 const Notes = require('../models/notes')
+const sendEmail = require('../resetPass/sendMail');
 const maxAGe = 3 * 24 * 60 * 60;
 const createToken = (id)=>{
     return jwt.sign({id},process.env.secret,{ expiresIn:maxAGe})
@@ -17,9 +18,16 @@ const getuser =async (req)=>{
         return null;
      }
 }
+let generateCode;
+
 module.exports.post_signup = async (req,res)=>{
     const {name,email,password} = req.body;
     try{
+        const userL = await User.findOne({email});
+        if(userL){
+            res.status(401).json({errors:{email:"this email already exist",password:""}});
+            return;
+        }
         const user = await User.create({name,email,password});
         const token = createToken(user._id);
         res.cookie('jwt',token,{httpOnly:true,maxAge:3 * 24 * 60 * 60 * 1000 });
@@ -119,5 +127,50 @@ module.exports.update_note = async (req,res)=>{
     }
     catch(err){
         res.status(500).json({errors:err.message});
+    }
+}
+module.exports.update_get = async (req,res)=>{
+    const {email} = req.body;
+    console.log(email);
+    try{
+        const user = await User.findOne({email});
+        if(!user) {
+            res.status(404).json({err:{message:"this email is not exist"}});
+            return;
+        };
+        const token = await createToken(user._id);
+        generateCode = Math.floor(Math.random()*899999) + 100000;
+        console.log(generateCode);
+        console.log(token);
+        const text = `Hi ${user.name} , for change Your Password enter this code ${generateCode},this code available for 5 minut`;
+        try{
+            await sendEmail(email,text);
+        }
+        catch(err){
+            console.error('Email err :',err);
+            res.status(404).json({err});
+            return;
+        }
+        res.cookie('jwt',token,{httpOnly:true,maxAge:3 * 24 * 60 * 60 * 1000});
+        res.json({user,code:generateCode});
+    }
+    catch(err){
+        console.log(err);
+        res.status(404).json({err});
+    } 
+}
+module.exports.change_pass = async (req,res)=>{
+    const password = req.body.password;
+    try{
+        const user = await getuser(req);
+        if(!user){
+            res.json({err:{message:'not exist a token'}});
+            return;
+        }
+        const users = await User.findByIdAndUpdate(user._id,{name:user.name,email:user.email,password:password},{ new: true, runValidators: true });
+        res.status(200).json({users});
+
+    }catch(err){
+        res.status(400).json({err});
     }
 }
